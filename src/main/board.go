@@ -2,10 +2,14 @@ package main
 
 import (
 	"fmt"
+	"math/rand"
 	"strconv"
+	"time"
 )
 
-var letters string
+var random rand.Rand
+
+const boardLetters = "ABCDEFGHIJ"
 
 type Board struct {
 	grid [10][10]byte
@@ -19,7 +23,7 @@ func (board *Board) AddShips() {
 		var row, col, direction int
 		for !isValid {
 			row, col, direction = generateRandomShipPositions()
-			// fmt.Printf("%c%d\n", letters[row], col)
+			// fmt.Printf("%c%d\n", boardLetters[row], col)
 			isValid = board.CheckIfShipPositionIsValid(row, col, direction, shipSize)
 			if debug {
 				fmt.Printf("%d is valid\n", shipSize)
@@ -28,7 +32,7 @@ func (board *Board) AddShips() {
 		// valid position. ship can be set now
 		board.AddShip(row, col, direction, shipSize)
 		if debug {
-			fmt.Printf("Ship size %d added at %c%d!\n", shipSize, letters[row], col)
+			fmt.Printf("Ship size %d added at %c%d!\n", shipSize, boardLetters[row], col)
 		}
 	}
 }
@@ -73,7 +77,9 @@ func (board *Board) AddShip(row, col, direction, shipSize int) {
 }
 
 func (board *Board) CreateEmptyBoard() {
-	letters = "ABCDEFGHIJ"
+	s1 := rand.NewSource(time.Now().UnixNano())
+	random = *(rand.New(s1))
+
 	// Empty board
 	for i := 0; i < len(board.grid); i++ {
 		for j := 0; j < len(board.grid[i]); j++ {
@@ -88,7 +94,7 @@ func (board *Board) PrintBoard() {
 	fmt.Println("   -----------------------------------------")
 
 	for i := 0; i < len(board.grid); i++ {
-		fmt.Printf(" %c |", letters[i])
+		fmt.Printf(" %c |", boardLetters[i])
 		for j := 0; j < len(board.grid[i]); j++ {
 			if debug {
 				fmt.Printf(" %c |", board.grid[i][j])
@@ -124,7 +130,6 @@ func generateRandomShipPositions() (row, col, direction int) {
 }
 
 func (board *Board) CheckIfShipPositionIsValid(row, col, direction, shipSize int) (isValid bool) {
-	// fmt.Printf("Cheching if ship location is valid at %c%d going in %d with size %d\n", letters[row], col, direction, shipSize)
 	switch direction {
 	case 0:
 		// up
