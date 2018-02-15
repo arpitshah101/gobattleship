@@ -80,9 +80,9 @@ func (board *Board) CreateEmptyBoard() {
 	random = *(rand.New(s1))
 
 	// Empty board
-	for i := 0; i < len(board.grid); i++ {
-		for j := 0; j < len(board.grid[i]); j++ {
-			board.grid[i][j] = ' '
+	for rowIndex, row := range board.grid {
+		for cell := range row {
+			board.grid[rowIndex][cell] = ' '
 		}
 	}
 	return
