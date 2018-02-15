@@ -15,24 +15,38 @@ type Board struct {
 	grid [10][10]byte
 }
 
+func NewBoard() *Board {
+	s1 := rand.NewSource(time.Now().UnixNano())
+	random = *(rand.New(s1))
+
+	board := new(Board)
+	// Empty board
+	for rowIndex, row := range board.grid {
+		for cell := range row {
+			board.grid[rowIndex][cell] = ' '
+		}
+	}
+
+	return board
+}
+
 func (board *Board) AddShips() {
-	ships := [...]int{5, 4, 3, 3, 2}
-	for shipIndex := 0; shipIndex < len(ships); shipIndex++ {
-		shipSize := ships[shipIndex]
+	ships := []int{5, 4, 3, 3, 2}
+	for _, ship := range ships {
 		isValid := false
 		var row, col, direction int
 		for !isValid {
 			row, col, direction = generateRandomShipPositions()
 			// fmt.Printf("%c%d\n", boardLetters[row], col)
-			isValid = board.CheckIfShipPositionIsValid(row, col, direction, shipSize)
+			isValid = board.CheckIfShipPositionIsValid(row, col, direction, ship)
 			if debug {
-				fmt.Printf("%d is valid\n", shipSize)
+				fmt.Printf("%d is valid\n", ship)
 			}
 		}
 		// valid position. ship can be set now
-		board.AddShip(row, col, direction, shipSize)
+		board.AddShip(row, col, direction, ship)
 		if debug {
-			fmt.Printf("Ship size %d added at %c%d!\n", shipSize, boardLetters[row], col)
+			fmt.Printf("Ship size %d added at %c%d!\n", ship, boardLetters[row], col)
 		}
 	}
 }
@@ -76,39 +90,23 @@ func (board *Board) AddShip(row, col, direction, shipSize int) {
 	}
 }
 
-func (board *Board) CreateEmptyBoard() {
-	s1 := rand.NewSource(time.Now().UnixNano())
-	random = *(rand.New(s1))
-
-	// Empty board
-	for i := 0; i < len(board.grid); i++ {
-		for j := 0; j < len(board.grid[i]); j++ {
-			board.grid[i][j] = ' '
-		}
-	}
-	return
-}
-
 func (board *Board) PrintBoard() {
 	fmt.Println("     1   2   3   4   5   6   7   8   9  10")
 	fmt.Println("   -----------------------------------------")
 
-	for i := 0; i < len(board.grid); i++ {
-		fmt.Printf(" %c |", boardLetters[i])
-		for j := 0; j < len(board.grid[i]); j++ {
+	for rowIndex, row := range board.grid {
+		fmt.Printf(" %c |", boardLetters[rowIndex])
+		for _, cell := range row {
 			if debug {
-				fmt.Printf(" %c |", board.grid[i][j])
+				fmt.Printf(" %c |", cell)
 			} else {
-				switch board.grid[i][j] {
-				case 'O':
-					fallthrough
-				case 'X':
-					fmt.Printf(" %c |", board.grid[i][j])
+				switch cell {
+				case 'O', 'X':
+					fmt.Printf(" %c |", cell)
 				default:
 					fmt.Print("   |")
 				}
 			}
-
 		}
 		fmt.Println("\n   -----------------------------------------")
 	}
