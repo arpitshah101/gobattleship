@@ -93,22 +93,21 @@ func (board *Board) PrintBoard() {
 	fmt.Println("     1   2   3   4   5   6   7   8   9  10")
 	fmt.Println("   -----------------------------------------")
 
-	for i := 0; i < len(board.grid); i++ {
-		fmt.Printf(" %c |", boardLetters[i])
-		for j := 0; j < len(board.grid[i]); j++ {
+	for rowIndex, row := range board.grid {
+		fmt.Printf(" %c |", boardLetters[rowIndex])
+		for _, cell := range row {
 			if debug {
-				fmt.Printf(" %c |", board.grid[i][j])
+				fmt.Printf(" %c |", cell)
 			} else {
-				switch board.grid[i][j] {
+				switch cell {
 				case 'O':
 					fallthrough
 				case 'X':
-					fmt.Printf(" %c |", board.grid[i][j])
+					fmt.Printf(" %c |", cell)
 				default:
 					fmt.Print("   |")
 				}
 			}
-
 		}
 		fmt.Println("\n   -----------------------------------------")
 	}
