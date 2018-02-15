@@ -99,9 +99,7 @@ func (board *Board) PrintBoard() {
 				fmt.Printf(" %c |", cell)
 			} else {
 				switch cell {
-				case 'O':
-					fallthrough
-				case 'X':
+				case 'O', 'X':
 					fmt.Printf(" %c |", cell)
 				default:
 					fmt.Print("   |")
