@@ -21,12 +21,12 @@ func main() {
 	board.PrintBoard()
 }
 
-func getTargetLocation() {
+func getTargetLocation() (row, col int) {
 	fmt.Print("Enter coordinates (i.e. A1): ")
 	text, _ := reader.ReadString('\n')
 	text = text[:len(text)-1]
 
-	row := strings.ToUpper(text)[0] - 'A'
+	row = int(strings.ToUpper(text)[0] - 'A')
 	col, err := strconv.Atoi(text[1:2])
 
 	if row < 0 || row >= 10 {
@@ -34,11 +34,10 @@ func getTargetLocation() {
 	}
 
 	if err != nil {
-		panic("second value is not a number")
-	} else if col < 0 {
-
+		panic(fmt.Sprintf("Second value (%s) is not a number!", text[1:2]))
+	} else if col < 0 || col >= 10 {
+		panic(fmt.Sprintf("Second value (%s) must be between [0, 9]!", text[1:2]))
 	}
 
-	fmt.Printf("Row %c\n", boardLetters[row])
-	fmt.Printf("Col %d\n", col)
+	return row, col
 }
