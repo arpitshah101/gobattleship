@@ -14,8 +14,7 @@ var reader *bufio.Reader
 
 func main() {
 	reader = bufio.NewReader(os.Stdin)
-	board := Board{}
-	board.CreateEmptyBoard()
+	board := NewBoard()
 	board.PrintBoard()
 	board.AddShips()
 	board.PrintBoard()

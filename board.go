@@ -15,6 +15,21 @@ type Board struct {
 	grid [10][10]byte
 }
 
+func NewBoard() *Board {
+	s1 := rand.NewSource(time.Now().UnixNano())
+	random = *(rand.New(s1))
+
+	board := new(Board)
+	// Empty board
+	for rowIndex, row := range board.grid {
+		for cell := range row {
+			board.grid[rowIndex][cell] = ' '
+		}
+	}
+
+	return board
+}
+
 func (board *Board) AddShips() {
 	ships := []int{5, 4, 3, 3, 2}
 	for _, ship := range ships {
@@ -73,19 +88,6 @@ func (board *Board) AddShip(row, col, direction, shipSize int) {
 			}
 		}
 	}
-}
-
-func (board *Board) CreateEmptyBoard() {
-	s1 := rand.NewSource(time.Now().UnixNano())
-	random = *(rand.New(s1))
-
-	// Empty board
-	for rowIndex, row := range board.grid {
-		for cell := range row {
-			board.grid[rowIndex][cell] = ' '
-		}
-	}
-	return
 }
 
 func (board *Board) PrintBoard() {
