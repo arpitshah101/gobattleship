@@ -16,23 +16,22 @@ type Board struct {
 }
 
 func (board *Board) AddShips() {
-	ships := [...]int{5, 4, 3, 3, 2}
-	for shipIndex := 0; shipIndex < len(ships); shipIndex++ {
-		shipSize := ships[shipIndex]
+	ships := []int{5, 4, 3, 3, 2}
+	for _, ship := range ships {
 		isValid := false
 		var row, col, direction int
 		for !isValid {
 			row, col, direction = generateRandomShipPositions()
 			// fmt.Printf("%c%d\n", boardLetters[row], col)
-			isValid = board.CheckIfShipPositionIsValid(row, col, direction, shipSize)
+			isValid = board.CheckIfShipPositionIsValid(row, col, direction, ship)
 			if debug {
-				fmt.Printf("%d is valid\n", shipSize)
+				fmt.Printf("%d is valid\n", ship)
 			}
 		}
 		// valid position. ship can be set now
-		board.AddShip(row, col, direction, shipSize)
+		board.AddShip(row, col, direction, ship)
 		if debug {
-			fmt.Printf("Ship size %d added at %c%d!\n", shipSize, boardLetters[row], col)
+			fmt.Printf("Ship size %d added at %c%d!\n", ship, boardLetters[row], col)
 		}
 	}
 }
