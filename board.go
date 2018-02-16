@@ -11,6 +11,8 @@ var random rand.Rand
 
 const boardLetters = "ABCDEFGHIJ"
 
+var ships = []int{5, 4, 3, 3, 2}
+
 type Board struct {
 	grid [10][10]byte
 }
@@ -31,7 +33,6 @@ func NewBoard() *Board {
 }
 
 func (board *Board) AddShips() {
-	ships := []int{5, 4, 3, 3, 2}
 	for _, ship := range ships {
 		isValid := false
 		var row, col, direction int
@@ -52,10 +53,9 @@ func (board *Board) AddShips() {
 }
 
 func (board *Board) SetValue(row, col int, value byte) bool {
-	if !board.IsEmptyLocation(row, col) {
+	if currentVal := board.GetValueAtLoc(row, col); currentVal == 'X' || currentVal == 'O' {
 		return false
 	}
-
 	board.grid[row][col] = value
 	return true
 }
@@ -178,4 +178,46 @@ func (board *Board) CheckIfShipPositionIsValid(row, col, direction, shipSize int
 		}
 	}
 	return true
+}
+
+func isIntInList(value int, list []int) bool {
+	for _, num := range list {
+		if num == value {
+			return true
+		}
+	}
+	return false
+}
+
+func getUniqueShipSizes(shipArray []int) []int {
+	var uniqueShips []int
+	for _, shipSize := range ships {
+		if !isIntInList(shipSize, uniqueShips) {
+			uniqueShips = append(uniqueShips, shipSize)
+		}
+	}
+	return uniqueShips
+}
+
+func (board *Board) GetRemainingShips() (remainingShips []int) {
+	uniqueShips := getUniqueShipSizes(ships)
+	alive := make([]bool, len(uniqueShips))
+	for _, row := range board.grid {
+	CELL_LOOP:
+		for _, cell := range row {
+			for shipIndex, ship := range uniqueShips {
+				if strconv.Itoa(ship)[0] == cell {
+					alive[shipIndex] = true
+					continue CELL_LOOP
+				}
+			}
+		}
+	}
+
+	for index, isAlive := range alive {
+		if isAlive {
+			remainingShips = append(remainingShips, uniqueShips[index])
+		}
+	}
+	return
 }
